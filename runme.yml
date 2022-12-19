@@ -1,0 +1,35 @@
+- hosts: web
+
+  tasks:
+  - name: install the most fresh version of Apache 
+    yum:
+      name: httpd
+      state: latest
+  
+  - name: make sure Apache is started and enabled 
+    systemd:
+      state: started
+      enabled: yes
+      name: httpd
+
+  - name: Install unzip
+    yum:
+      name: unzip
+      state: latest
+    
+  - name: Unarchive a file that needs to be downloaded 
+    unarchive: 
+      src: https://www.free-css.com/assets/files/free-css-templates/download/page235/ubutia.zip
+      dest: /tmp/
+      remote_src: yes
+ 
+  - name: Copy files    
+    copy: 
+      src: /tmp/ubutia-master 
+      dest: /var/www/html
+      remote_src: yes  
+
+  - name: Restart Apache
+    service:
+      name: httpd
+      state: restarted
